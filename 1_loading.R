@@ -39,7 +39,7 @@ control_targets <- transmute(as.data.frame(control_targets),
 control_targets$Gender[control_targets$Gender == "UNKNOWN"] <- NA_character_
 
 
-raw_control_data <- read.metharray.exp(targets = control_targets, force = T)
+#raw_control_data <- read.metharray.exp(targets = control_targets, force = T)
 
 
 #---- Cancer-related targets object is built, in order to complement
@@ -59,11 +59,10 @@ case_targets <- select(case_targets, Gender, Age, Basename, Subgroup = Type)
 case_targets <- case_targets[!(case_targets$Subgroup == "WNT") &
                               (case_targets$Basename != "character(0)"), ]
 
-raw_case_data <- read.metharray.exp(targets = case_targets)
+#raw_case_data <- read.metharray.exp(targets = case_targets)
 
-gdata::keep(case_targets, control_targets, 
-            raw_control_data, raw_case_data, sure = T)
+gdata::keep(case_targets, control_targets, sure = T)
 
 
-save(case_targets, control_targets, raw_case_data, raw_control_data,
+save(case_targets, control_targets,
      file = paste0("./rdata_files/1_loaded.RData"))
