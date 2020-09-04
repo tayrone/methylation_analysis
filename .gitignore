@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+cancer_data
+control_data
+control_acession_numbers.txt
+rdata_files
+methylation.Rproj
