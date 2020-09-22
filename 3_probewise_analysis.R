@@ -47,7 +47,7 @@ for(subgroup in subgroups){
   subbed_annotation_epic <- as.data.frame(annotation_epic[row_positions, ])
   
   all_cpgs <- limma::topTable(fit, coef = 1, number = Inf, 
-                       sort.by = "p", genelist = subbed_annotation_epic)
+                              sort.by = "p", genelist = subbed_annotation_epic)
   
   empty_columns <- which(sapply(all_cpgs, function(x) all(is.na(x) | x == '')))
   
