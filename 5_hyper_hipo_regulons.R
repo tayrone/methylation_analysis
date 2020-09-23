@@ -1,20 +1,18 @@
 library(tidyverse)
+library(limma)
 
 #---- Loads all data requied to identify hipo and hyper methylated regulons ----
 
-load("/data4/tayrone25/medulloblastoma/methylation/rdata_files/
-     Group3/4_dm_regulons.RData")
+load("/data4/tayrone25/medulloblastoma/methylation/rdata_files/Group3/4_dm_regulons.RData")
 
 hm_regulons <- rownames(hm_regulons)
 
-load("/data4/tayrone25/medulloblastoma/expression_analysis/
-     rdata_files/network/g3_rtn.RData")
+load("/data4/tayrone25/medulloblastoma/expression_analysis/rdata_files/network/g3_rtn.RData")
 
 regulons_list <- rtna@listOfRegulons
 
 
-load("/data4/tayrone25/medulloblastoma/methylation/rdata_files/
-     Group3/3_probewised.RData")
+load("/data4/tayrone25/medulloblastoma/methylation/rdata_files/Group3/3_probewised.RData")
 
 
 #---- By summing up all results from fit model, define hipo and hyper 
@@ -36,6 +34,9 @@ results <- results %>%
   transmute(sum = sum(up_down)) %>% 
   distinct()
 
+
+ggplot(results) +
+  geom_tile()
 
 #---- Now, define portion of hipo and hyper methylation in each regulon ----
 
