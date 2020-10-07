@@ -3,16 +3,34 @@ library(limma)
 
 #---- Loads all data requied to identify hipo and hyper methylated regulons ----
 
-load("/data4/tayrone25/medulloblastoma/methylation/rdata_files/Group3/4_dm_regulons.RData")
+load("./rdata_files/Group3/4_dm_regulons.RData")
 
 hm_regulons <- rownames(hm_regulons)
 
-load("/data4/tayrone25/medulloblastoma/expression_analysis/rdata_files/network/g3_rtn.RData")
+load("../expression_analysis/rdata_files/signature/g3_signature.RData")
 
-regulons_list <- rtna@listOfRegulons
+tfs <- names(rtna@listOfRegulons)
+
+load("./rdata_files/Group3/3_probewised.RData")
 
 
-load("/data4/tayrone25/medulloblastoma/methylation/rdata_files/Group3/3_probewised.RData")
+
+
+methylation_results <- decideTests(fit, p.value = 0.01)
+methylation_results <- data.frame(methylation_results@.Data, 
+                                  name = rownames(methylation_results@.Data),
+                                  row.names = NULL)
+
+methylation_results <- select(methylation_results, name, up_down = control.Group3)
+
+methylation_results <- methylation_results %>% 
+  inner_join(diff_methylated, by = "name") %>% 
+  select(name, up_down, gene = ucsc_refgene_name) %>% 
+  drop_na()
+
+
+
+methylation_results <- methylation_results[methylation_results$gene %in% tfs, ]
 
 
 #---- By summing up all results from fit model, define hipo and hyper 
@@ -39,6 +57,15 @@ ggplot(results) +
   geom_tile()
 
 #---- Now, define portion of hipo and hyper methylation in each regulon ----
+
+function(regulon){
+  return(results[results$gene %in% regulon, ])
+  
+}
+
+genes_in_regulon <- 
+  lapply(regulons_list, function(regulon) results[results$gene %in% regulon, ])
+
 
 gdata::keep(hm_regulons, regulons_list, dm_genes, sure = T)
 
